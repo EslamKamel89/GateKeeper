@@ -1,47 +1,86 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Articles') }}
-        </h2>
-    </x-slot>
+<x-layouts.app :title="__('Dashboard')">
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h2 class="text-xl bold">Edit Article</h2>
-                    <form method="post" action="{{ route('articles.update', ['article' => $article->id]) }}" class="mt-6 space-y-6">
+                    <h2 class="text-xl font-bold mb-6">Edit Article</h2>
+
+                    <form method="POST"
+                        action="{{ route('articles.update', ['article' => $article->id]) }}"
+                        class="space-y-6">
                         @csrf
                         @method('patch')
 
+                        {{-- Title Field --}}
                         <div>
-                            <x-input-label for="title" :value="__('Title')" />
-                            <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $article->title)" required autofocus autocomplete="title" />
-                            <x-input-error class="mt-2" :messages="$errors->get('title')" />
-                        </div>
+                            <label for="title" class="block text-sm font-medium text-gray-700">
+                                {{ __('Title') }}
+                            </label>
+                            <input id="title"
+                                name="title"
+                                type="text"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+                                value="{{ old('title', $article->title) }}"
+                                required
+                                autofocus
+                                autocomplete="title">
 
-                        <div>
-                            <x-input-label for="content" :value="__('Content')" />
-                            <x-text-area id="content" name="content" class="mt-1 block w-full" required>{{old('content', $article->content)}}</x-text-area>
-                            <x-input-error class="mt-2" :messages="$errors->get('content')" />
-                        </div>
-
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input type="hidden" name="is_published" value="0">
-                                <input id="is_published" name="is_published" type="checkbox"
-                                       value="1" @checked(old('is_published', $article->is_published))
-                                       class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mr-2">
+                            @if($errors->has('title'))
+                            <div class="mt-2 text-sm text-red-600">
+                                @foreach ($errors->get('title') as $error)
+                                <p>{{ $error }}</p>
+                                @endforeach
                             </div>
-                            <x-input-label for="is_published" :value="__('Published')" />
+                            @endif
                         </div>
 
+                        {{-- Content Field --}}
+                        <div>
+                            <label for="content" class="block text-sm font-medium text-gray-700">
+                                {{ __('Content') }}
+                            </label>
+                            <textarea id="content"
+                                name="content"
+                                rows="6"
+                                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2"
+                                required>{{ old('content', $article->content) }}</textarea>
+
+                            @if($errors->has('content'))
+                            <div class="mt-2 text-sm text-red-600">
+                                @foreach ($errors->get('content') as $error)
+                                <p>{{ $error }}</p>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
+
+                        {{-- Published Checkbox --}}
+                        <div class="flex items-center">
+                            <input type="hidden" name="is_published" value="0">
+                            <input id="is_published"
+                                name="is_published"
+                                type="checkbox"
+                                value="1"
+                                @checked(old('is_published', $article->is_published))
+                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mr-2">
+                            <label for="is_published" class="text-sm font-medium text-gray-700">
+                                {{ __('Published') }}
+                            </label>
+                        </div>
+
+                        {{-- Save Button --}}
                         <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Save') }}</x-primary-button>
+                            <button type="submit"
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                {{ __('Save') }}
+                            </button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+
+</x-layouts.app>
