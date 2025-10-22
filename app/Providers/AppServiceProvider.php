@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Features;
 use Laravel\Telescope\Telescope;
 
 class AppServiceProvider extends ServiceProvider {
@@ -18,5 +19,9 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot(): void {
         Telescope::night();
+        Features::twoFactorAuthentication([
+            'confirm' => false,
+            'confirmPassword' => false,
+        ]);
     }
 }

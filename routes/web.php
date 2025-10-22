@@ -1,16 +1,22 @@
 <?php
 
+use App\Http\Controllers\ArticlesController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
+use App\Models\Article;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('articles.index', [
+            'articles' => Article::all(),
+        ]);
+    })->name('home');
+    Route::resource('articles', ArticlesController::class);
+});
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
